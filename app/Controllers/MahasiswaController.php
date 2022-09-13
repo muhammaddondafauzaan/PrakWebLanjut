@@ -20,13 +20,6 @@ class Pages extends BaseController
         . view ('templates/footer');
     }
 
-    public function create(){
-        $data = ['title' => "Create"];
-        return view('templates/header', $data)
-            . view('mahasiswa/create')
-            . view('templates/footer');
-    }
-
     public function about()
     {
         $data['title'] = "About";
@@ -47,6 +40,13 @@ class Pages extends BaseController
         return view('templates/header', $data)
         . view('pages/mahasiswa', $data)
         . view ('templates/footer');
+    }
+
+    public function create(){
+        $data = ['title' => 'Create'];
+        return view('templates/header', $data)
+            . view('mahasiswa/create')
+            . view('templates/footer');
     }
 
     public function test(){
