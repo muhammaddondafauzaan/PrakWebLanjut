@@ -38,6 +38,10 @@ $routes->set404Override();
 $routes->get('/', 'Pages::index');
 $routes->get('/home', 'Pages::home');
 $routes->get('/about', 'Pages::about');
+$routes->post('/store', 'Pages::store');
+$routes->post('/update/(:num)', 'Pages::update/$1');
+$routes->get('/edit/(:num)', 'Pages::edit/$1');
+$routes->delete('/delete/(:num)', 'Pages::delete/$1');
 $routes->get('/mahasiswa', 'Pages::mahasiswa');
 $routes->get('/create', 'Pages::create');
 
