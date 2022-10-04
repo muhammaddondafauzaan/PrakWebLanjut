@@ -3,116 +3,89 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\MahasiswaModel;
+use App\Models\Mahasiswa;
 
-class Pages extends BaseController
+class MahasiswaController extends BaseController
 {
     public function index()
     {
-        return view('welcome_message');
-    }
-
-    public function home()
-    {
-        $data['title'] = "Home";
-        return view('templates/header', $data)
-        . view('pages/home')
-        . view ('templates/footer');
-    }
-
-    public function create(){
-        if(!$this->validate([
-            'npm' => 'required',
-            'nama' => 'required',
-        ])){
-            return redirect()->to('/create');
-        }
-
-        $data = [
-            'title' => 'Create Mahasiswa'
-        ];
-        return view('templates/header', $data)
-            . view('pages/create', $data)
-            . view('templates/footer');
-    }
-
-    public function about()
-    {
-        $data['title'] = "About";
-        return view('templates/header', $data)
-        . view('pages/about')
-        . view ('templates/footer');
-    }
-
-    public function mahasiswa()
-    {
-        $mahasiswaModel = new MahasiswaModel();
+        //
+        $mahasiswaModel = new Mahasiswa();
         $mahasiswa = $mahasiswaModel->findAll();
+
         $data = [
-            'title' => "Mahasiswa",
+            'title' => 'Mahasiswa',
             'mahasiswa' => $mahasiswa
         ];
 
-        return view('templates/header', $data)
-        . view('pages/mahasiswa', $data)
-        . view ('templates/footer');
+        return view('mahasiswa/list', $data);
     }
-
-    public function test(){
-        dd('test');
-    }
-
-    public function store(){
-        if(!$this->validate([
-            'npm' => 'required',
-            'nama' => 'required',
-        ])){
-            return redirect()->to('/create');
-        }
-
-        $mahasiswaModel = new MahasiswaModel();
+    public function create()
+    {
         $data = [
-            'npm' => $this->request->getPost('npm'),
-            'nama' => $this->request->getPost('nama'),
+            'title' => 'Create Mahasiswa'
         ];
-
-        $mahasiswaModel->save($data);
+        return view('mahasiswa/create',$data);
+    }
+    public function store(){
+        $mahasiswaModel = new Mahasiswa();
+        if(!$this->validate([
+            'npm' => 'required|is_unique[mahasiswa.npm]',
+            'nama' => 'required',
+            'alamat' => 'required',
+            'deskripsi' => 'required'
+        ])){
+            $data = [
+                'title' => 'Create Mahasiswa',
+                'validation' => $this->validator
+            ];
+            return redirect()->to('/create')->withInput();
+        }
+        $mahasiswaModel->save([
+            'npm' => $this->request->getVar('npm'),
+            'nama' => $this->request->getVar('nama'),
+            'alamat' => $this->request->getVar('alamat'),
+            'deskripsi' => $this->request->getVar('deskripsi')
+        ]);
         return redirect()->to('/mahasiswa');
     }
 
     public function delete($id)
     {
-        $mahasiswaModel = new MahasiswaModel();
+        $mahasiswaModel = new Mahasiswa();
         $mahasiswaModel->delete($id);
 
         return redirect()->to('/mahasiswa');
     }
 
     public function edit($id){
-        $mahasiswaModel = new MahasiswaModel();
+        $mahasiswaModel = new Mahasiswa();
         $mahasiswa = $mahasiswaModel->find($id);
 
         $data = [
-            'title' => 'Edit Mahasiswa'
+            'title' => 'Edit Mahasiswa',
+            'mahasiswa' => $mahasiswa
         ];
 
-        return view('templates/header', $data)
-            . view('mahasiswa/edit', $mahasiswa)
-            . view('templates/footer');
+        return view('mahasiswa/edit', $data);
     }
 
     public function update($id){
         if(!$this->validate([
             'npm' => 'required',
             'nama' => 'required',
+            'alamat' => 'required',
+            'deskripsi' => 'required'
         ])){
             return redirect()->to('/edit/' .$id);
         }
 
-        $mahasiswaModel = new MahasiswaModel();
+        $mahasiswaModel = new Mahasiswa();
         $data = [
             'npm' => $this->request->getVar('npm'),
             'nama' => $this->request->getVar('nama'),
+            'alamat' => $this->request->getVar('alamat'),
+            'deskripsi' => $this->request->getVar('deskripsi')
         ];
 
         $mahasiswaModel->update($id, $data);

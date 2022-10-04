@@ -1,2 +1,4 @@
-<h3>ini halaman home</h3>
-<p>Tes</p>
+<?= $this->extend('template') ?>
+<?= $this->section('content') ?>
+<h1>HOME</h1>
+<?= $this->endSection() ?>
